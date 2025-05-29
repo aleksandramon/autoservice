@@ -98,3 +98,17 @@ class WorkSchedule(models.Model):
 
     def __str__(self):
         return f"Расписание для {self.specialist.name} на {self.day_of_week}"
+    
+# Новая модель Избранное
+class Favorites(models.Model):
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Пользователь")
+    service = models.ForeignKey(Services, on_delete=models.CASCADE, verbose_name="Услуга")
+    added_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата добавления")
+
+    class Meta:
+        verbose_name = "Избранное"
+        verbose_name_plural = "Избранное"
+        unique_together = ('user', 'service')  # Уникальность пары пользователь-услуга
+
+    def __str__(self):
+        return f"{self.user.name} добавил {self.service.title} в избранное"
