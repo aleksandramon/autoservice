@@ -1,9 +1,19 @@
-{% extends "base.html" %}
-
-{% block title %}{{ service.title }}{% endblock %}
-
-{% block content %}
-    <h1>{{ service.title }}</h1>
-    <p class="date">Цена: {{ service.price }} | Статус: {{ service.status }}</p>
-    <p>{{ service.description }}</p>
-{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ service.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>{{ service.title }}</h1>
+        <p><strong>Описание:</strong> {{ service.description }}</p>
+        <p><strong>Цена:</strong> {{ service.price }} руб.</p>
+        <p><strong>Длительность:</strong> {{ service.duration }}</p>
+        <p><strong>Статус:</strong> {{ service.status }}</p>
+        <a href="{% url 'autoservice:service_list' %}" class="btn btn-primary">Назад к списку услуг</a>
+    </div>
+</body>
+</html>
