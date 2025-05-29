@@ -42,6 +42,7 @@ class Specialists(models.Model):
     experience = models.CharField(max_length=255, verbose_name="Опыт")
     specialization = models.CharField(max_length=255, verbose_name="Специализация")
     rating = models.DecimalField(max_digits=3, decimal_places=2, verbose_name="Рейтинг")
+    services = models.ManyToManyField(Services, verbose_name="Услуги", blank=True)  # Добавляем ManyToManyField
 
     class Meta:
         verbose_name = "Специалист"
@@ -53,8 +54,8 @@ class Specialists(models.Model):
 # Модель Бронирования
 class Bookings(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user_id = models.IntegerField(verbose_name="ID пользователя")
-    service_id = models.IntegerField(verbose_name="ID услуги")
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Пользователь")  # Заменили user_id
+    service = models.ForeignKey(Services, on_delete=models.CASCADE, verbose_name="Услуга")  # Заменили service_id
     booking_date = models.DateField(verbose_name="Дата бронирования")
     time_slot = models.TimeField(verbose_name="Временной слот")
     status = models.CharField(max_length=50, verbose_name="Статус")
@@ -64,13 +65,13 @@ class Bookings(models.Model):
         verbose_name_plural = "Бронирования"
 
     def __str__(self):
-        return f"Бронирование от {self.booking_date} для {self.user_id}"
+        return f"Бронирование от {self.booking_date} для {self.user.name}"
 
 # Модель Отзывы
 class Reviews(models.Model):
     id = models.BigAutoField(primary_key=True)
-    user_id = models.IntegerField(verbose_name="ID пользователя")
-    service_id = models.IntegerField(verbose_name="ID услуги")
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Пользователь")  # Заменили user_id
+    service = models.ForeignKey(Services, on_delete=models.CASCADE, verbose_name="Услуга")  # Заменили service_id
     review_text = models.TextField(verbose_name="Текст отзыва")
     rating = models.IntegerField(verbose_name="Рейтинг")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -80,12 +81,12 @@ class Reviews(models.Model):
         verbose_name_plural = "Отзывы"
 
     def __str__(self):
-        return f"Отзыв от {self.user_id} на {self.created_at}"
+        return f"Отзыв от {self.user.name} на {self.created_at}"
 
 # Модель Расписание работы
 class WorkSchedule(models.Model):
     id = models.BigAutoField(primary_key=True)
-    specialist_id = models.IntegerField(verbose_name="ID специалиста")
+    specialist = models.ForeignKey(Specialists, on_delete=models.CASCADE, verbose_name="Специалист")  # Заменили specialist_id
     day_of_week = models.CharField(max_length=20, verbose_name="День недели")
     start_time = models.TimeField(verbose_name="Время начала")
     end_time = models.TimeField(verbose_name="Время окончания")
@@ -96,4 +97,4 @@ class WorkSchedule(models.Model):
         verbose_name_plural = "Расписания работы"
 
     def __str__(self):
-        return f"Расписание для {self.specialist_id} на {self.day_of_week}"
+        return f"Расписание для {self.specialist.name} на {self.day_of_week}"
