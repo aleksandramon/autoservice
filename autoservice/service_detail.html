@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}{{ service.title }}{% endblock %}
+
+{% block content %}
+    <h1>{{ service.title }}</h1>
+    <p class="date">Цена: {{ service.price }} | Статус: {{ service.status }}</p>
+    <p>{{ service.description }}</p>
+{% endblock %}

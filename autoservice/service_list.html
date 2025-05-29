@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Список услуг{% endblock %}
+
+{% block content %}
+    <h1>Список услуг</h1>
+    {% for service in services %}
+        <h2><a href="{% url 'autoservice:service_detail' service.id %}">{{ service.title }}</a></h2>
+        <p class="date">Цена: {{ service.price }} | Статус: {{ service.status }}</p>
+        <p>{{ service.description|truncatewords:30|linebreaks }}</p>
+    {% endfor %}
+{% endblock %}
