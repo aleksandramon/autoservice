@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-# Модель Услуги
 class Services(models.Model):
     id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=255, verbose_name="Название услуги")
@@ -18,7 +17,6 @@ class Services(models.Model):
     def __str__(self):
         return self.title
 
-# Модель Пользователи
 class Users(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=25, verbose_name="Имя")
@@ -35,14 +33,13 @@ class Users(models.Model):
     def __str__(self):
         return self.name
 
-# Модель Специалисты
 class Specialists(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=25, verbose_name="Имя")
     experience = models.CharField(max_length=255, verbose_name="Опыт")
     specialization = models.CharField(max_length=255, verbose_name="Специализация")
     rating = models.DecimalField(max_digits=3, decimal_places=2, verbose_name="Рейтинг")
-    services = models.ManyToManyField(Services, verbose_name="Услуги", blank=True)  # Добавляем ManyToManyField
+    services = models.ManyToManyField(Services, verbose_name="Услуги", blank=True)
 
     class Meta:
         verbose_name = "Специалист"
@@ -51,7 +48,6 @@ class Specialists(models.Model):
     def __str__(self):
         return self.name
 
-# Модель Бронирования
 class Bookings(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Пользователь")  # Заменили user_id
@@ -67,7 +63,6 @@ class Bookings(models.Model):
     def __str__(self):
         return f"Бронирование от {self.booking_date} для {self.user.name}"
 
-# Модель Отзывы
 class Reviews(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Пользователь")  # Заменили user_id
@@ -83,7 +78,6 @@ class Reviews(models.Model):
     def __str__(self):
         return f"Отзыв от {self.user.name} на {self.created_at}"
 
-# Модель Расписание работы
 class WorkSchedule(models.Model):
     id = models.BigAutoField(primary_key=True)
     specialist = models.ForeignKey(Specialists, on_delete=models.CASCADE, verbose_name="Специалист")  # Заменили specialist_id
@@ -98,8 +92,7 @@ class WorkSchedule(models.Model):
 
     def __str__(self):
         return f"Расписание для {self.specialist.name} на {self.day_of_week}"
-    
-# Новая модель Избранное
+
 class Favorites(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE, verbose_name="Пользователь")
     service = models.ForeignKey(Services, on_delete=models.CASCADE, verbose_name="Услуга")
@@ -108,7 +101,7 @@ class Favorites(models.Model):
     class Meta:
         verbose_name = "Избранное"
         verbose_name_plural = "Избранное"
-        unique_together = ('user', 'service')  # Уникальность пары пользователь-услуга
+        unique_together = ('user', 'service')  
 
     def __str__(self):
         return f"{self.user.name} добавил {self.service.title} в избранное"
