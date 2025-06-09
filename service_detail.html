@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ service.title }}{% endblock %}
+
+{% block content %}
+    <div class="service-detail">
+        <h1>{{ service.title }} ({{ service.title_en }})</h1>
+        <p><strong>Описание:</strong> {{ service.description }}</p>
+        <p><strong>Цена:</strong> {{ service.price|floatformat:2 }} ₽</p>
+        <p><strong>Предполагаемая длительность:</strong> {{ service.duration_minutes }} минут</p>
+        <p><strong>Активна:</strong> {% if service.is_active %}Да{% else %}Нет{% endif %}</p>
+        <p><strong>Дата премьеры:</strong> {{ service.premiere_date|date:"d.m.Y" }}</p>
+
+        <h2>Специалисты, предоставляющие эту услугу:</h2>
+        {% if specialists_for_service %}
+            <ul>
+                {% for specialist in specialists_for_service %}
+                    <li>{{ specialist.first_name }} {{ specialist.last_name }} ({{ specialist.specialization }})</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>На данный момент нет активных специалистов, предлагающих эту услугу.</p>
+        {% endif %}
+
+        <h2>Отзывы об услуге:</h2>
+        {% if reviews_for_service %}
+            <div class="reviews-list">
+                {% for review in reviews_for_service %}
+                    <div class="review-item">
+                        <p class="review-text">"{{ review.review_text }}"</p>
+                        <p class="review-rating">Рейтинг: {{ review.rating }}/5</p>
+                        <p class="review-author"><small>От: {{ review.user.name }} от {{ review.review_date|date:"d.m.Y H:i" }}</small></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Пока нет отзывов для этой услуги.</p>
+        {% endif %}
+
+        <div class="action-buttons">
+            <a href="{% url 'service_edit' service.id %}" class="btn btn-primary">Редактировать услугу</a>
+            <form action="{% url 'service_delete' service.id %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Удалить услугу</button>
+            </form>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Вернуться на главную</a>
+        </div>
+    </div>
+{% endblock %}

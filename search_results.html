@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Результаты поиска{% endblock %}
+
+{% block content %}
+    <h1>Результаты поиска по запросу "{{ query }}"</h1>
+
+    {% if results %}
+        <h2>Найденные результаты:</h2>
+        <ul class="search-results-list">
+            {% for item in results %}
+                <li>
+                    {% if item|floatformat:0 == item.price|floatformat:0 %} {# Простой способ отличить Services от Specialists по наличию поля price #}
+                        <a href="{% url 'service_detail' item.id %}">Услуга: {{ item.title }}</a>
+                        <p>{{ item.description|truncatechars:150 }}</p>
+                        <p>Цена: {{ item.price|floatformat:2 }} ₽</p>
+                    {% else %}
+                        <p>Специалист: {{ item.first_name }} {{ item.last_name }} ({{ item.specialization }})</p>
+                        <p>Опыт: {{ item.experience_years }} лет</p>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>По вашему запросу ничего не найдено.</p>
+    {% endif %}
+
+    <a href="{% url 'home' %}" class="btn btn-secondary">Вернуться на главную</a>
+{% endblock %}

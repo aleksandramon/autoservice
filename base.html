@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Автосервис - {% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <a href="{% url 'home' %}" class="logo">Автосервис</a>
+                <ul>
+                    <li><a href="{% url 'home' %}">Главная</a></li>
+                    <li><a href="{% url 'service_add' %}">Добавить услугу</a></li>
+                    </ul>
+                <div class="search-bar">
+                    <form action="{% url 'search_results' %}" method="get">
+                        <input type="text" name="q" placeholder="Поиск услуг или специалистов...">
+                        <button type="submit">Поиск</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Автосервис. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

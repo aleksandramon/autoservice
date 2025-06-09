@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <h1>Добро пожаловать в наш Автосервис!</h1>
+
+    <div class="widget-section">
+        <div class="widget">
+            <h2>Популярные Услуги</h2>
+            <ol>
+                {% for service in top_services %}
+                    <li>
+                        <a href="{% url 'service_detail' service.id %}">{{ service.title }} ({{ service.title_en }})</a>
+                        <p>{{ service.description|truncatechars:100 }}</p>
+                        <p>Цена: {{ service.price|floatformat:2 }} ₽</p>
+                        <button class="btn btn-favorite">Добавить в избранное</button>
+                    </li>
+                {% empty %}
+                    <li>Нет популярных услуг.</li>
+                {% endfor %}
+            </ol>
+            <p><a href="#" class="view-all-link">Посмотреть все услуги &raquo;</a></p>
+        </div>
+
+        <div class="widget">
+            <h2>Новые Услуги</h2>
+            <ul>
+                {% for service in new_services %}
+                    <li>
+                        <a href="{% url 'service_detail' service.id %}">{{ service.title }} ({{ service.title_en }})</a>
+                        <p>Дата премьеры: {{ service.premiere_date|date:"d.m.Y" }}</p>
+                        <p>Длительность: {{ service.duration_minutes }} мин.</p>
+                        <button class="btn btn-favorite">Добавить в избранное</button>
+                    </li>
+                {% empty %}
+                    <li>Нет новых услуг.</li>
+                {% endfor %}
+            </ul>
+            <p><a href="#" class="view-all-link">Все новинки &raquo;</a></p>
+        </div>
+
+        <div class="widget">
+            <h2>Последние Отзывы</h2>
+            <ul>
+                {% for review in latest_reviews %}
+                    <li>
+                        <p>"{{ review.review_text|truncatechars:150 }}"</p>
+                        <p>Рейтинг: {{ review.rating }}/5</p>
+                        <p><small>От: {{ review.user.name }} (Услуга: <a href="{% url 'service_detail' review.service.id %}">{{ review.service.title }}</a>)</small></p>
+                    </li>
+                {% empty %}
+                    <li>Пока нет отзывов.</li>
+                {% endfor %}
+            </ul>
+            <p><a href="#" class="view-all-link">Все отзывы &raquo;</a></p>
+        </div>
+    </div>
+
+    <div class="stats-section">
+        <h2>Статистика сервиса</h2>
+        <p>Средний рейтинг услуг: <strong>{{ average_service_rating|floatformat:1 }}</strong> из 5</p>
+        <p>Количество активных специалистов: <strong>{{ active_specialists_count }}</strong></p>
+    </div>
+
+{% endblock %}

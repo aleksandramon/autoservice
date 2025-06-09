@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} услугу{% endblock %}
+
+{% block content %}
+    <h1>{{ action }} услугу</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }} {# Это выводит форму в виде параграфов. Для более сложной верстки нужно итерироваться по полям #}
+        <button type="submit" class="btn btn-success">{{ action }}</button>
+        {% if service %}
+            <a href="{% url 'service_detail' service.id %}" class="btn btn-secondary">Отмена</a>
+        {% else %}
+            <a href="{% url 'home' %}" class="btn btn-secondary">Отмена</a>
+        {% endif %}
+    </form>
+{% endblock %}
